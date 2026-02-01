@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>STATIC — Tournaments</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="dot"></div>
+        <div class="brandText">STATIC</div>
+      </div>
+      <div class="right">
+        <span id="me" class="pill">Гость</span>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="tournaments">Турниры</button>
+      <button class="tab" data-tab="teams">Команды</button>
+      <button class="tab" data-tab="matches">Матчи</button>
+      <button class="tab" data-tab="admin">Админ</button>
+    </nav>
+
+    <main class="main">
+      <!-- TOURNAMENTS -->
+      <section id="tab-tournaments" class="panel show">
+        <div class="panelHeader">
+          <div>
+            <h1>Турниры</h1>
+            <p class="sub">Регистрация, сетка, check-in и результаты.</p>
+          </div>
+          <div class="actions">
+            <button class="btn secondary" id="btnRefresh">Обновить</button>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <div class="cardTitle">Ближайшие</div>
+            <div id="tournamentList" class="list"></div>
+          </div>
+
+          <div class="card">
+            <div class="cardTitle">Детали турнира</div>
+            <div id="tournamentDetails" class="empty">
+              Выбери турнир слева.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TEAMS -->
+      <section id="tab-teams" class="panel">
+        <div class="panelHeader">
+          <div>
+            <h1>Команды</h1>
+            <p class="sub">Создай команду и подавай заявки.</p>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <div class="cardTitle">Создать команду</div>
+            <div class="form">
+              <label>Название</label>
+              <input id="teamName" class="input" placeholder="STATIC Youth" />
+              <label>Тег (3–5)</label>
+              <input id="teamTag" class="input" placeholder="STC" maxlength="5" />
+              <label>Капитан TG ID (цифры)</label>
+              <input id="teamCaptainId" class="input" placeholder="123456789" />
+              <button class="btn primary" id="btnCreateTeam">Создать</button>
+              <p class="hint">TG ID нужен для уведомлений. В Mini App можно автозаполнять позже.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="cardTitle">Список команд</div>
+            <div id="teamList" class="list"></div>
+          </div>
+        </div>
+
+        <div class="card mt">
+          <div class="cardTitle">Карточка команды</div>
+          <div id="teamCard" class="empty">Выбери команду из списка.</div>
+        </div>
+      </section>
+
+      <!-- MATCHES -->
+      <section id="tab-matches" class="panel">
+        <div class="panelHeader">
+          <div>
+            <h1>Матчи</h1>
+            <p class="sub">Check-in, сдача счета, подтверждение.</p>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <div class="cardTitle">Матчи турнира</div>
+            <div class="form inline">
+              <label>Турнир ID</label>
+              <input id="matchesTournamentId" class="input" placeholder="Скопируй из деталей турнира" />
+              <button class="btn secondary" id="btnLoadMatches">Загрузить</button>
+            </div>
+            <div id="matchList" class="list"></div>
+          </div>
+
+          <div class="card">
+            <div class="cardTitle">Управление матчем</div>
+            <div id="matchDetails" class="empty">Выбери матч слева.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ADMIN -->
+      <section id="tab-admin" class="panel">
+        <div class="panelHeader">
+          <div>
+            <h1>Админ</h1>
+            <p class="sub">Создание турнира, аппрув, генерация сетки, оверрайд.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="cardTitle">Вход</div>
+          <div class="form inline">
+            <label>Admin key</label>
+            <input id="adminKey" class="input" placeholder="Введи ключ" />
+            <button class="btn primary" id="btnAdminLogin">Войти</button>
+            <span id="adminState" class="pill">Не авторизован</span>
+          </div>
+          <p class="hint">Ключ задаётся в Apps Script (ADMIN_KEY).</p>
+        </div>
+
+        <div class="grid2 mt">
+          <div class="card">
+            <div class="cardTitle">Создать турнир</div>
+            <div class="form">
+              <label>Название</label>
+              <input id="tName" class="input" placeholder="STATIC CUP #1" />
+              <label>Дата/время (текст)</label>
+              <input id="tTime" class="input" placeholder="19:00 MSK" />
+              <label>Слоты</label>
+              <select id="tSlots" class="input">
+                <option>8</option>
+                <option selected>16</option>
+                <option>32</option>
+              </select>
+              <label>Правила (кратко)</label>
+              <textarea id="tRules" class="input" rows="4" placeholder="Bo1, single elimination, check-in обязателен..."></textarea>
+              <button class="btn primary" id="btnCreateTournament">Создать</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="cardTitle">Заявки / Управление</div>
+            <div class="form inline">
+              <label>Турнир ID</label>
+              <input id="adminTournamentId" class="input" placeholder="ID турнира" />
+              <button class="btn secondary" id="btnLoadRegistrations">Заявки</button>
+              <button class="btn secondary" id="btnGenerateBracket">Сгенерить сетку</button>
+              <button class="btn secondary" id="btnNotifyAll">Оповестить всех</button>
+            </div>
+            <div id="registrationList" class="list"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span class="muted">STATIC · Tournament Operator</span>
+      <span class="muted" id="apiState">API: не настроено</span>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
