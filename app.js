@@ -317,16 +317,9 @@ async function reloadMatches(){
 
 // ====== Admin ======
 $("btnAdminLogin").onclick = async () => {
-  ADMIN_KEY = $("adminKey").value.trim();
-  if (!ADMIN_KEY) return alert("Введи ключ");
-  try {
-    await api("adminPing", {});
-    $("adminState").textContent = "Авторизован";
-  } catch (e) {
-    ADMIN_KEY = "";
-    $("adminState").textContent = "Не авторизован";
-    alert("Неверный ключ");
-  }
+  ADMIN_KEY = "TEST";
+  $("adminState").textContent = "Авторизован (test mode)";
+  alert("Админ-режим включён (без защиты).");
 };
 
 $("btnCreateTournament").onclick = async () => {
