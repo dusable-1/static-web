@@ -23,14 +23,39 @@ async function api(action, payload = {}) {
     throw new Error("API_URL not set");
   }
   $("apiState").textContent = "API: подключено";
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ action, adminKey: ADMIN_KEY || undefined, ...payload })
+
+  // JSONP: action + payload в query
+  const cbName = "cb_" + Math.random().toString(16).slice(2);
+  const fullPayload = { ...payload };
+  if (ADMIN_KEY) fullPayload.adminKey = ADMIN_KEY;
+
+  const url =
+    API_URL +
+    "?action=" + encodeURIComponent(action) +
+    "&cb=" + encodeURIComponent(cbName) +
+    "&p=" + encodeURIComponent(JSON.stringify(fullPayload));
+
+  return await new Promise((resolve, reject) => {
+    window[cbName] = (data) => {
+      try {
+        delete window[cbName];
+        script.remove();
+        if (data && data.error) reject(new Error(data.error));
+        else resolve(data);
+      } catch (e) {
+        reject(e);
+      }
+    };
+
+    const script = document.createElement("script");
+    script.src = url;
+    script.onerror = () => {
+      delete window[cbName];
+      script.remove();
+      reject(new Error("JSONP load failed"));
+    };
+    document.body.appendChild(script);
   });
-  const data = await res.json();
-  if (!res.ok || data.error) throw new Error(data.error || "API error");
-  return data;
 }
 
 // ====== State ======
