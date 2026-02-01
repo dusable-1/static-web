@@ -1,6 +1,6 @@
 // ====== CONFIG ======
 const API_URL = "https://script.google.com/macros/s/AKfycbyVicYWGpC0MeSoX6-uP23c4uKOVo3zFr10mybI6NXFcxeGZ3vcF-Mw5fO-BjfI4dCD/exec"; // будет вида https://script.google.com/macros/s/.../exec
-let ADMIN_KEY = "203241"; // хранится в памяти браузера после ввода
+let ADMIN_KEY = ""; // хранится в памяти браузера после ввода
 
 // ====== UI helpers ======
 const $ = (id) => document.getElementById(id);
